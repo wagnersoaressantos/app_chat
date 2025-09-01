@@ -26,7 +26,6 @@ class _ChatGrupoPageState extends State<ChatGrupoPage> {
   final textoController = TextEditingController(text: '');
   bool _timeout = false;
   String userId = "";
-
   @override
   void initState() {
     super.initState();
@@ -60,7 +59,6 @@ class _ChatGrupoPageState extends State<ChatGrupoPage> {
                   stream: db
                       .collection('chats')
                       .where('grupoId', isEqualTo: widget.grupoId)
-                      .orderBy('timestamp', descending: false)
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
@@ -79,7 +77,6 @@ class _ChatGrupoPageState extends State<ChatGrupoPage> {
                           (e.data() as Map<String, dynamic>),
                         );
                         return ChatWidget(
-                          
                           textModel: textModel,
                           souEu: textModel.userId == userId,
                         );

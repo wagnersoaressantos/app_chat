@@ -66,12 +66,13 @@ class HomePage extends StatelessWidget {
               if (snapshot.hasError) {
                 return const Center(child: Text('Erro ao carregar grupos'));
               }
-              final grupos = snapshot.data!.docs
-                  .map((doc) => GrupoModel.fromDocument(doc))
-                  .toList();
-              if (grupos.isEmpty) {
+              if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                 return const Center(child: Text('Nenhum grupo criado ainda.'));
               }
+              var grupos = snapshot.data!.docs
+                  .map((doc) => GrupoModel.fromDocument(doc))
+                  .toList();
+
               return !snapshot.hasData
                   ? CircularProgressIndicator()
                   : ListView.builder(

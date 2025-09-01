@@ -1,4 +1,3 @@
-
 import 'package:app_chat/models/text_model.dart';
 import 'package:app_chat/shared/widgets/chat_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -24,7 +23,7 @@ class _ChatPageState extends State<ChatPage> {
     carregarUsuario();
   }
 
-  carregarUsuario() async {
+  Future<void> carregarUsuario() async {
     final prefs = await SharedPreferences.getInstance();
     userId = prefs.getString('user_id')!;
     setState(() {});
@@ -41,7 +40,10 @@ class _ChatPageState extends State<ChatPage> {
             children: [
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
-                  stream: db.collection('chats').snapshots(),
+                  stream: db
+                      .collection('chats')
+                      .where('grupoId', isNull: true)
+                      .snapshots(),
                   builder: (context, snapshot) {
                     return !snapshot.hasData
                         ? CircularProgressIndicator()
@@ -78,7 +80,12 @@ class _ChatPageState extends State<ChatPage> {
                     ),
                     IconButton(
                       onPressed: () async {
-                        var textModel = TextModel(nickname: widget.nickname,text: textoController.text,userId: userId, grupoId: null);
+                        var textModel = TextModel(
+                          nickname: widget.nickname,
+                          text: textoController.text,
+                          userId: userId,
+                          grupoId: null,
+                        );
                         await db.collection("chats").add(textModel.toJson());
                         textoController.text = '';
                       },
